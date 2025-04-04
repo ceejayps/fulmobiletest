@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta http-equiv="ScreenOrientation" content="autoRotate:disabled">
     <title>Fullscreen Landscape Mode</title>
     <style>
@@ -12,28 +12,54 @@
             box-sizing: border-box;
         }
         
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: fixed;
+            touch-action: none;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
         body {
             font-family: Arial, sans-serif;
-            min-height: 100vh;
             background: linear-gradient(to right, #8a2be2, #4b0082);
             color: white;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-            text-align: center;
-            overflow: hidden;
+            /* Extend content into the safe area */
+            padding: 0;
+            padding-left: env(safe-area-inset-left, 0);
+            padding-right: env(safe-area-inset-right, 0);
+            padding-top: env(safe-area-inset-top, 0);
+            padding-bottom: env(safe-area-inset-bottom, 0);
+        }
+        
+        .app-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
         }
         
         .container {
-            max-width: 800px;
-            width: 100%;
+            max-width: 90%;
+            width: 800px;
             background-color: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 30px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin: 0 20px;
         }
         
         h1 {
@@ -73,7 +99,7 @@
         }
         
         .notes {
-            margin-top: 30px;
+            margin-top: 20px;
             font-size: 14px;
             opacity: 0.8;
         }
@@ -120,7 +146,6 @@
                 flex-direction: row;
                 align-items: center;
                 text-align: left;
-                padding: 40px;
             }
             
             .content {
@@ -162,6 +187,17 @@
         :-ms-fullscreen {
             background: linear-gradient(to right, #8a2be2, #4b0082);
         }
+        
+        /* Hide browser UI elements */
+        .hide-ui {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            background: transparent;
+        }
     </style>
 </head>
 <body>
@@ -174,31 +210,34 @@
         <p>This application is designed to be used in landscape mode.</p>
     </div>
 
-    <div class="container">
-        <div class="content">
-            <h1>Fullscreen Landscape Mode</h1>
-            <p>Tap the button to enter fullscreen landscape mode. For the best experience, please rotate your device to landscape orientation.</p>
-            <div class="notes">
-                <p>Note: Fullscreen mode requires user interaction for security reasons.</p>
-                <p>Some mobile browsers may still show minimal UI elements.</p>
+    <div class="app-container">
+        <div class="container">
+            <div class="content">
+                <h1>Fullscreen Landscape Mode</h1>
+                <p>Tap the button to enter fullscreen landscape mode that ignores safe areas and fills the entire screen.</p>
+                <div class="notes">
+                    <p>Note: This page extends content to the edges of the screen, ignoring safe areas.</p>
+                    <p>Some devices may still show system UI elements that cannot be hidden.</p>
+                </div>
             </div>
-        </div>
-        <div class="button-container">
-            <button id="fullscreen-btn" class="fullscreen-btn">
-                <svg class="icon" id="fullscreen-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="15 3 21 3 21 9"></polyline>
-                    <polyline points="9 21 3 21 3 15"></polyline>
-                    <line x1="21" y1="3" x2="14" y2="10"></line>
-                    <line x1="3" y1="21" x2="10" y2="14"></line>
-                </svg>
-                Enter Fullscreen
-            </button>
+            <div class="button-container">
+                <button id="fullscreen-btn" class="fullscreen-btn">
+                    <svg class="icon" id="fullscreen-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <polyline points="9 21 3 21 3 15"></polyline>
+                        <line x1="21" y1="3" x2="14" y2="10"></line>
+                        <line x1="3" y1="21" x2="10" y2="14"></line>
+                    </svg>
+                    Enter Fullscreen
+                </button>
+            </div>
         </div>
     </div>
 
     <script>
         const fullscreenBtn = document.getElementById('fullscreen-btn');
         const orientationMessage = document.querySelector('.orientation-message');
+        const body = document.body;
         
         // Check if fullscreen is supported
         function fullscreenSupported() {
@@ -224,13 +263,28 @@
                 
                 // Enter fullscreen
                 if (document.documentElement.requestFullscreen) {
-                    document.documentElement.requestFullscreen();
+                    document.documentElement.requestFullscreen({navigationUI: "hide"});
                 } else if (document.documentElement.webkitRequestFullscreen) {
-                    document.documentElement.webkitRequestFullscreen();
+                    document.documentElement.webkitRequestFullscreen({navigationUI: "hide"});
                 } else if (document.documentElement.mozRequestFullScreen) {
-                    document.documentElement.mozRequestFullScreen();
+                    document.documentElement.mozRequestFullScreen({navigationUI: "hide"});
                 } else if (document.documentElement.msRequestFullscreen) {
-                    document.documentElement.msRequestFullscreen();
+                    document.documentElement.msRequestFullscreen({navigationUI: "hide"});
+                }
+                
+                // Add class to help hide UI
+                body.classList.add('fullscreen-active');
+                
+                // Create an overlay to capture touches and prevent browser UI from showing
+                if (!document.querySelector('.hide-ui')) {
+                    const uiHider = document.createElement('div');
+                    uiHider.className = 'hide-ui';
+                    document.body.appendChild(uiHider);
+                    
+                    // Prevent default on touch events to avoid browser UI
+                    uiHider.addEventListener('touchstart', function(e) {
+                        e.preventDefault();
+                    }, {passive: false});
                 }
                 
                 fullscreenBtn.innerHTML = `
@@ -253,6 +307,15 @@
                 } else if (document.msExitFullscreen) {
                     document.msExitFullscreen();
                 }
+                
+                // Remove UI hider if it exists
+                const uiHider = document.querySelector('.hide-ui');
+                if (uiHider) {
+                    uiHider.remove();
+                }
+                
+                // Remove fullscreen class
+                body.classList.remove('fullscreen-active');
                 
                 fullscreenBtn.innerHTML = `
                     <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -305,6 +368,15 @@
                 if (screen.orientation && screen.orientation.unlock) {
                     screen.orientation.unlock();
                 }
+                
+                // Remove UI hider if it exists
+                const uiHider = document.querySelector('.hide-ui');
+                if (uiHider) {
+                    uiHider.remove();
+                }
+                
+                // Remove fullscreen class
+                body.classList.remove('fullscreen-active');
             }
         }
         
@@ -324,11 +396,34 @@
         window.addEventListener("orientationchange", checkOrientation);
         window.addEventListener("resize", checkOrientation);
         
+        // Prevent default touch actions to avoid browser UI
+        document.addEventListener('touchstart', function(e) {
+            if (document.fullscreenElement) {
+                // Allow touches on the button
+                if (e.target === fullscreenBtn || fullscreenBtn.contains(e.target)) {
+                    return;
+                }
+                e.preventDefault();
+            }
+        }, {passive: false});
+        
+        // Prevent scrolling
+        document.addEventListener('touchmove', function(e) {
+            if (document.fullscreenElement) {
+                e.preventDefault();
+            }
+        }, {passive: false});
+        
         // Check if fullscreen is supported and show/hide button accordingly
         if (!fullscreenSupported()) {
             fullscreenBtn.style.display = 'none';
             document.querySelector('.notes').innerHTML = '<p>Fullscreen mode is not supported in your browser.</p>';
         }
+        
+        // Prevent context menu
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
     </script>
 </body>
 </html>

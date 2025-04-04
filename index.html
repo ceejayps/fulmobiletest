@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fullscreen Mobile Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(to bottom, #8a2be2, #4b0082);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        p {
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .fullscreen-btn {
+            background-color: white;
+            color: #8a2be2;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            transition: background-color 0.3s;
+        }
+        
+        .fullscreen-btn:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .icon {
+            margin-right: 8px;
+            width: 20px;
+            height: 20px;
+        }
+        
+        .notes {
+            margin-top: 30px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fullscreen Mobile Demo</h1>
+        <p>Tap the button below to toggle fullscreen mode.</p>
+        <button id="fullscreen-btn" class="fullscreen-btn">
+            <svg class="icon" id="fullscreen-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+            </svg>
+            Enter Fullscreen
+        </button>
+    </div>
+    
+    <div class="notes">
+        <p>Note: Fullscreen mode requires user interaction for security reasons.</p>
+        <p>Some mobile browsers may still show minimal UI elements.</p>
+    </div>
+
+    <script>
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const fullscreenIcon = document.getElementById('fullscreen-icon');
+        
+        // Check if fullscreen is supported
+        function fullscreenSupported() {
+            return document.documentElement.requestFullscreen || 
+                   document.documentElement.webkitRequestFullscreen ||
+                   document.documentElement.mozRequestFullScreen ||
+                   document.documentElement.msRequestFullscreen;
+        }
+        
+        // Toggle fullscreen mode
+        function toggleFullscreen() {
+            if (!document.fullscreenElement &&
+                !document.webkitFullscreenElement &&
+                !document.mozFullScreenElement &&
+                !document.msFullscreenElement) {
+                
+                // Enter fullscreen
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    document.documentElement.webkitRequestFullscreen();
+                } else if (document.documentElement.mozRequestFullScreen) {
+                    document.documentElement.mozRequestFullScreen();
+                } else if (document.documentElement.msRequestFullscreen) {
+                    document.documentElement.msRequestFullscreen();
+                }
+                
+                fullscreenBtn.innerHTML = `
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="4 14 10 14 10 20"></polyline>
+                        <polyline points="20 10 14 10 14 4"></polyline>
+                        <line x1="14" y1="10" x2="21" y2="3"></line>
+                        <line x1="3" y1="21" x2="10" y2="14"></line>
+                    </svg>
+                    Exit Fullscreen
+                `;
+            } else {
+                // Exit fullscreen
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+                
+                fullscreenBtn.innerHTML = `
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <polyline points="9 21 3 21 3 15"></polyline>
+                        <line x1="21" y1="3" x2="14" y2="10"></line>
+                        <line x1="3" y1="21" x2="10" y2="14"></line>
+                    </svg>
+                    Enter Fullscreen
+                `;
+            }
+        }
+        
+        // Add event listener to button
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+        
+        // Update button text when fullscreen state changes
+        document.addEventListener('fullscreenchange', updateButtonText);
+        document.addEventListener('webkitfullscreenchange', updateButtonText);
+        document.addEventListener('mozfullscreenchange', updateButtonText);
+        document.addEventListener('MSFullscreenChange', updateButtonText);
+        
+        function updateButtonText() {
+            if (document.fullscreenElement ||
+                document.webkitFullscreenElement ||
+                document.mozFullScreenElement ||
+                document.msFullscreenElement) {
+                
+                fullscreenBtn.innerHTML = `
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="4 14 10 14 10 20"></polyline>
+                        <polyline points="20 10 14 10 14 4"></polyline>
+                        <line x1="14" y1="10" x2="21" y2="3"></line>
+                        <line x1="3" y1="21" x2="10" y2="14"></line>
+                    </svg>
+                    Exit Fullscreen
+                `;
+            } else {
+                fullscreenBtn.innerHTML = `
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <polyline points="9 21 3 21 3 15"></polyline>
+                        <line x1="21" y1="3" x2="14" y2="10"></line>
+                        <line x1="3" y1="21" x2="10" y2="14"></line>
+                    </svg>
+                    Enter Fullscreen
+                `;
+            }
+        }
+        
+        // Check if fullscreen is supported and show/hide button accordingly
+        if (!fullscreenSupported()) {
+            fullscreenBtn.style.display = 'none';
+            document.querySelector('.notes').innerHTML = '<p>Fullscreen mode is not supported in your browser.</p>';
+        }
+    </script>
+</body>
+</html>

@@ -4,42 +4,35 @@
     <meta charset="UTF-8">
     <!-- Viewport settings -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta http-equiv="ScreenOrientation" content="autoRotate:disabled">
     
-    <!-- Web app capable meta tags -->
+    <!-- PWA meta tags -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Fullscreen App">
-    <meta name="application-name" content="Fullscreen App">
+    <meta name="apple-mobile-web-app-title" content="Landscape App">
+    <meta name="application-name" content="Landscape App">
+    <meta name="description" content="A fullscreen landscape mode application">
     
     <!-- Theme colors -->
     <meta name="theme-color" content="#8a2be2">
     <meta name="msapplication-navbutton-color" content="#8a2be2">
     <meta name="msapplication-TileColor" content="#8a2be2">
     
-    <title>Fullscreen Landscape Mode</title>
+    <title>Landscape PWA</title>
     
     <!-- Web App Manifest -->
-    <link rel="manifest" href="data:application/manifest+json,{
-      &quot;name&quot;: &quot;Fullscreen App&quot;,
-      &quot;short_name&quot;: &quot;FullscreenApp&quot;,
-      &quot;start_url&quot;: &quot;.&quot;,
-      &quot;display&quot;: &quot;standalone&quot;,
-      &quot;orientation&quot;: &quot;landscape&quot;,
-      &quot;background_color&quot;: &quot;#8a2be2&quot;,
-      &quot;theme_color&quot;: &quot;#8a2be2&quot;,
-      &quot;icons&quot;: [
-        {
-          &quot;src&quot;: &quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%238a2be2'/%3E%3C/svg%3E&quot;,
-          &quot;sizes&quot;: &quot;512x512&quot;,
-          &quot;type&quot;: &quot;image/svg+xml&quot;
-        }
-      ]
-    }">
+    <link rel="manifest" href="manifest.json">
     
-    <!-- Apple touch icon -->
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%238a2be2'/%3E%3C/svg%3E">
+    <!-- Apple touch icons -->
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="icon-167.png">
+    
+    <!-- Splash screens for iOS -->
+    <link rel="apple-touch-startup-image" href="splash-2048x1536.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)">
+    <link rel="apple-touch-startup-image" href="splash-1668x1224.png" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)">
+    <link rel="apple-touch-startup-image" href="splash-1290x924.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)">
     
     <style>
         * {
@@ -64,7 +57,6 @@
             -webkit-user-select: none;
             user-select: none;
             font-family: Arial, sans-serif;
-            /* Explicitly set the background to match html */
             background: linear-gradient(to right, #8a2be2, #4b0082);
             color: white;
             display: flex;
@@ -96,11 +88,6 @@
             background: linear-gradient(to right, #8a2be2, #4b0082) !important;
         }
         
-        /* Ensure the document element also has the background */
-        :root:fullscreen {
-            background: linear-gradient(to right, #8a2be2, #4b0082) !important;
-        }
-        
         .app-container {
             position: absolute;
             top: 0;
@@ -111,7 +98,6 @@
             align-items: center;
             justify-content: center;
             z-index: 1;
-            /* Add background here too for extra safety */
             background: linear-gradient(to right, #8a2be2, #4b0082);
         }
         
@@ -190,19 +176,32 @@
             opacity: 0.8;
         }
         
-        .add-to-home {
+        .install-prompt {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             background-color: rgba(0, 0, 0, 0.7);
             color: white;
-            padding: 10px 20px;
+            padding: 15px 20px;
             border-radius: 8px;
             font-size: 14px;
             text-align: center;
             z-index: 100;
             display: none;
+            max-width: 90%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .install-prompt button {
+            background-color: white;
+            color: #8a2be2;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-top: 10px;
+            cursor: pointer;
         }
         
         .orientation-message {
@@ -300,7 +299,7 @@
         
         /* Standalone mode styles */
         @media all and (display-mode: standalone) {
-            .add-to-home {
+            .install-prompt {
                 display: none !important;
             }
         }
@@ -320,16 +319,16 @@
         <div class="container">
             <div class="container-content">
                 <div class="content">
-                    <h1>16:9 Fullscreen Canvas</h1>
-                    <p>This container maintains a perfect 16:9 aspect ratio. Tap the button to enter fullscreen landscape mode that ignores safe areas.</p>
+                    <h1>Landscape PWA</h1>
+                    <p>This 16:9 container is optimized for landscape mode. Install as a PWA for the best experience without browser tabs.</p>
                     <div class="notes">
-                        <p>Note: For the best experience without browser tabs, add this page to your home screen.</p>
-                        <p>Some devices may still show system UI elements that cannot be hidden.</p>
+                        <p>Note: This app works best in landscape orientation and when installed to your home screen.</p>
+                        <p>Fullscreen mode will automatically activate when in landscape.</p>
                     </div>
                 </div>
                 <div class="button-container">
-                    <button id="fullscreen-btn" class="fullscreen-btn">
-                        <svg class="icon" id="fullscreen-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <button id="fullscreenButton" class="fullscreen-btn">
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="15 3 21 3 21 9"></polyline>
                             <polyline points="9 21 3 21 3 15"></polyline>
                             <line x1="21" y1="3" x2="14" y2="10"></line>
@@ -342,55 +341,44 @@
         </div>
     </div>
     
-    <div id="add-to-home" class="add-to-home">
-        Add this page to your home screen for a tab-free experience
+    <div id="installPrompt" class="install-prompt">
+        Install this app to your home screen for a fullscreen landscape experience without browser tabs
+        <br>
+        <button id="installButton">Install Now</button>
     </div>
 
     <script>
-        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        // DOM elements
+        const fullscreenBtn = document.getElementById('fullscreenButton');
         const orientationMessage = document.querySelector('.orientation-message');
-        const addToHomeMessage = document.getElementById('add-to-home');
+        const installPrompt = document.getElementById('installPrompt');
+        const installButton = document.getElementById('installButton');
         const body = document.body;
         const html = document.documentElement;
         
-        // Check if fullscreen is supported
-        function fullscreenSupported() {
-            return document.documentElement.requestFullscreen || 
-                   document.documentElement.webkitRequestFullscreen ||
-                   document.documentElement.mozRequestFullScreen ||
-                   document.documentElement.msRequestFullscreen;
-        }
+        // Store the deferred prompt for later use
+        let deferredPrompt;
         
-        // Toggle fullscreen mode with landscape lock
-        function toggleFullscreen() {
-            if (!document.fullscreenElement &&
-                !document.webkitFullscreenElement &&
-                !document.mozFullScreenElement &&
-                !document.msFullscreenElement) {
-                
-                // Try to lock to landscape if supported
-                if (screen.orientation && screen.orientation.lock) {
-                    screen.orientation.lock('landscape').catch(function(error) {
-                        console.log('Screen orientation lock failed: ', error);
-                    });
+        // Function to go fullscreen (using your provided code as a base)
+        function goFullscreen() {
+            let elem = document.documentElement;
+            
+            try {
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen({navigationUI: "hide"});
+                } else if (elem.mozRequestFullScreen) {
+                    elem.mozRequestFullScreen({navigationUI: "hide"});
+                } else if (elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen({navigationUI: "hide"});
+                } else if (elem.msRequestFullscreen) {
+                    elem.msRequestFullscreen({navigationUI: "hide"});
                 }
                 
-                // Add class to help with background
+                // Add classes for styling
                 body.classList.add('fullscreen-active');
                 html.classList.add('fullscreen-active');
                 
-                // Enter fullscreen
-                if (document.documentElement.requestFullscreen) {
-                    document.documentElement.requestFullscreen({navigationUI: "hide"});
-                } else if (document.documentElement.webkitRequestFullscreen) {
-                    document.documentElement.webkitRequestFullscreen({navigationUI: "hide"});
-                } else if (document.documentElement.mozRequestFullScreen) {
-                    document.documentElement.mozRequestFullScreen({navigationUI: "hide"});
-                } else if (document.documentElement.msRequestFullscreen) {
-                    document.documentElement.msRequestFullscreen({navigationUI: "hide"});
-                }
-                
-                // Create an overlay to capture touches and prevent browser UI from showing
+                // Create an overlay to capture touches and prevent browser UI
                 if (!document.querySelector('.hide-ui')) {
                     const uiHider = document.createElement('div');
                     uiHider.className = 'hide-ui';
@@ -402,6 +390,7 @@
                     }, {passive: false});
                 }
                 
+                // Update button text
                 fullscreenBtn.innerHTML = `
                     <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="4 14 10 14 10 20"></polyline>
@@ -411,8 +400,21 @@
                     </svg>
                     Exit Fullscreen
                 `;
-            } else {
-                // Exit fullscreen
+                
+                // Try to lock to landscape if supported
+                if (screen.orientation && screen.orientation.lock) {
+                    screen.orientation.lock('landscape').catch(function(error) {
+                        console.log('Screen orientation lock failed: ', error);
+                    });
+                }
+            } catch (err) {
+                console.error('Fullscreen error:', err);
+            }
+        }
+        
+        // Function to exit fullscreen
+        function exitFullscreen() {
+            try {
                 if (document.exitFullscreen) {
                     document.exitFullscreen();
                 } else if (document.webkitExitFullscreen) {
@@ -433,6 +435,7 @@
                 body.classList.remove('fullscreen-active');
                 html.classList.remove('fullscreen-active');
                 
+                // Update button text
                 fullscreenBtn.innerHTML = `
                     <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="15 3 21 3 21 9"></polyline>
@@ -442,13 +445,32 @@
                     </svg>
                     Enter Fullscreen
                 `;
+                
+                // Release orientation lock if supported
+                if (screen.orientation && screen.orientation.unlock) {
+                    screen.orientation.unlock();
+                }
+            } catch (err) {
+                console.error('Exit fullscreen error:', err);
+            }
+        }
+        
+        // Toggle fullscreen
+        function toggleFullscreen() {
+            if (!document.fullscreenElement &&
+                !document.webkitFullscreenElement &&
+                !document.mozFullScreenElement &&
+                !document.msFullscreenElement) {
+                goFullscreen();
+            } else {
+                exitFullscreen();
             }
         }
         
         // Add event listener to button
         fullscreenBtn.addEventListener('click', toggleFullscreen);
         
-        // Update button text when fullscreen state changes
+        // Update fullscreen state when it changes
         document.addEventListener('fullscreenchange', updateFullscreenState);
         document.addEventListener('webkitfullscreenchange', updateFullscreenState);
         document.addEventListener('mozfullscreenchange', updateFullscreenState);
@@ -484,44 +506,60 @@
                     Enter Fullscreen
                 `;
                 
-                // Release orientation lock if supported
-                if (screen.orientation && screen.orientation.unlock) {
-                    screen.orientation.unlock();
-                }
-                
-                // Remove UI hider if it exists
-                const uiHider = document.querySelector('.hide-ui');
-                if (uiHider) {
-                    uiHider.remove();
-                }
-                
                 // Remove fullscreen classes
                 body.classList.remove('fullscreen-active');
                 html.classList.remove('fullscreen-active');
             }
         }
         
-        // Check orientation on load and when it changes
-        function checkOrientation() {
-            if (window.matchMedia("(orientation: portrait)").matches) {
-                orientationMessage.style.display = "flex";
-            } else {
+        // Check orientation and trigger fullscreen in landscape
+        function handleOrientationChange() {
+            if (window.innerWidth > window.innerHeight) {
+                // We're in landscape mode
                 orientationMessage.style.display = "none";
+                
+                // Auto-trigger fullscreen in landscape if not already in fullscreen
+                // and not in standalone mode (PWA)
+                if (!isInStandaloneMode() && 
+                    !document.fullscreenElement &&
+                    !document.webkitFullscreenElement &&
+                    !document.mozFullScreenElement &&
+                    !document.msFullscreenElement) {
+                    // Use a timeout to ensure orientation has fully changed
+                    setTimeout(goFullscreen, 500);
+                }
+            } else {
+                // We're in portrait mode
+                orientationMessage.style.display = "flex";
+                
+                // Exit fullscreen if in portrait
+                if (document.fullscreenElement ||
+                    document.webkitFullscreenElement ||
+                    document.mozFullScreenElement ||
+                    document.msFullscreenElement) {
+                    exitFullscreen();
+                }
             }
         }
         
-        // Check orientation on page load
-        checkOrientation();
-        
         // Listen for orientation changes
-        window.addEventListener("orientationchange", checkOrientation);
-        window.addEventListener("resize", checkOrientation);
+        window.addEventListener("orientationchange", function() {
+            // Use timeout to ensure orientation has fully changed
+            setTimeout(handleOrientationChange, 100);
+        });
+        
+        // Also check on resize (for browsers that don't support orientationchange)
+        window.addEventListener("resize", handleOrientationChange);
+        
+        // Check orientation on page load
+        handleOrientationChange();
         
         // Prevent default touch actions to avoid browser UI
         document.addEventListener('touchstart', function(e) {
             if (document.fullscreenElement) {
                 // Allow touches on the button
-                if (e.target === fullscreenBtn || fullscreenBtn.contains(e.target)) {
+                if (e.target === fullscreenBtn || fullscreenBtn.contains(e.target) ||
+                    e.target === installButton || installButton.contains(e.target)) {
                     return;
                 }
                 e.preventDefault();
@@ -535,28 +573,20 @@
             }
         }, {passive: false});
         
-        // Check if fullscreen is supported and show/hide button accordingly
-        if (!fullscreenSupported()) {
-            fullscreenBtn.style.display = 'none';
-            document.querySelector('.notes').innerHTML = '<p>Fullscreen mode is not supported in your browser.</p>';
-        }
-        
         // Prevent context menu
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
         });
         
-        // Force background color on load and resize
+        // Force background color
         function forceBackground() {
             document.body.style.background = 'linear-gradient(to right, #8a2be2, #4b0082)';
             document.documentElement.style.background = 'linear-gradient(to right, #8a2be2, #4b0082)';
         }
         
-        // Apply background on load
+        // Apply background on load and resize
         window.addEventListener('load', forceBackground);
         window.addEventListener('resize', forceBackground);
-        
-        // Apply background immediately
         forceBackground();
         
         // Check if the page is in standalone mode (added to home screen)
@@ -566,19 +596,63 @@
                    document.referrer.includes('android-app://');
         }
         
-        // Show add to home screen message if not in standalone mode
-        if (!isInStandaloneMode()) {
-            // Only show on mobile devices
-            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                setTimeout(function() {
-                    addToHomeMessage.style.display = 'block';
-                    
-                    // Hide after 10 seconds
-                    setTimeout(function() {
-                        addToHomeMessage.style.display = 'none';
-                    }, 10000);
-                }, 3000);
+        // PWA installation
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            // Stash the event so it can be triggered later
+            deferredPrompt = e;
+            // Show the install prompt
+            installPrompt.style.display = 'block';
+        });
+        
+        // Handle the install button click
+        installButton.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                // Show the install prompt
+                deferredPrompt.prompt();
+                // Wait for the user to respond to the prompt
+                const { outcome } = await deferredPrompt.userChoice;
+                // We no longer need the prompt
+                deferredPrompt = null;
+                // Hide our install UI
+                installPrompt.style.display = 'none';
+            } else {
+                // Fallback for browsers that don't support the beforeinstallprompt event
+                alert('To install this app, add it to your home screen using your browser menu.');
             }
+        });
+        
+        // Hide the install prompt when the app is installed
+        window.addEventListener('appinstalled', (evt) => {
+            installPrompt.style.display = 'none';
+        });
+        
+        // If not in standalone mode and on mobile, show install prompt after a delay
+        if (!isInStandaloneMode() && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            setTimeout(() => {
+                if (deferredPrompt) {
+                    installPrompt.style.display = 'block';
+                } else {
+                    // Show a different message for browsers that don't support beforeinstallprompt
+                    installPrompt.innerHTML = 'Add this app to your home screen for a fullscreen experience without browser tabs<br><small>Use your browser\'s "Add to Home Screen" option in the menu</small>';
+                    installPrompt.style.display = 'block';
+                    
+                    // Hide after 15 seconds
+                    setTimeout(() => {
+                        installPrompt.style.display = 'none';
+                    }, 15000);
+                }
+            }, 3000);
+        }
+        
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker registration failed: ', err));
+            });
         }
     </script>
 </body>

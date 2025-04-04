@@ -79,16 +79,37 @@
             background: linear-gradient(to right, #8a2be2, #4b0082);
         }
         
+        /* 16:9 aspect ratio container */
         .container {
-            max-width: 90%;
-            width: 800px;
+            position: relative;
+            width: 90%;
+            max-width: 1280px; /* Maximum width */
             background-color: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border-radius: 15px;
-            padding: 30px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            margin: 0 20px;
+            overflow: hidden;
+        }
+        
+        /* Create 16:9 aspect ratio */
+        .container::before {
+            content: "";
+            display: block;
+            padding-top: 56.25%; /* 9/16 = 0.5625 = 56.25% */
+        }
+        
+        /* Content inside the 16:9 container */
+        .container-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 30px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
         }
         
         h1 {
@@ -170,13 +191,6 @@
                 display: none !important;
             }
             
-            .container {
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                text-align: left;
-            }
-            
             .content {
                 flex: 1;
                 padding-right: 30px;
@@ -197,6 +211,23 @@
         @media screen and (orientation: portrait) {
             .orientation-message {
                 display: flex;
+            }
+            
+            /* Adjust container for portrait orientation */
+            .container {
+                width: 80%;
+                max-width: 500px;
+            }
+            
+            /* Different aspect ratio for portrait warning */
+            .container::before {
+                padding-top: 75%; /* 3:4 aspect ratio for portrait warning */
+            }
+            
+            .container-content {
+                flex-direction: column;
+                text-align: center;
+                justify-content: center;
             }
         }
         
@@ -229,24 +260,26 @@
 
     <div class="app-container">
         <div class="container">
-            <div class="content">
-                <h1>Fullscreen Landscape Mode</h1>
-                <p>Tap the button to enter fullscreen landscape mode that ignores safe areas and fills the entire screen.</p>
-                <div class="notes">
-                    <p>Note: This page extends content to the edges of the screen, ignoring safe areas.</p>
-                    <p>Some devices may still show system UI elements that cannot be hidden.</p>
+            <div class="container-content">
+                <div class="content">
+                    <h1>16:9 Fullscreen Canvas</h1>
+                    <p>This container maintains a perfect 16:9 aspect ratio. Tap the button to enter fullscreen landscape mode that ignores safe areas.</p>
+                    <div class="notes">
+                        <p>Note: This page extends content to the edges of the screen, ignoring safe areas.</p>
+                        <p>Some devices may still show system UI elements that cannot be hidden.</p>
+                    </div>
                 </div>
-            </div>
-            <div class="button-container">
-                <button id="fullscreen-btn" class="fullscreen-btn">
-                    <svg class="icon" id="fullscreen-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="15 3 21 3 21 9"></polyline>
-                        <polyline points="9 21 3 21 3 15"></polyline>
-                        <line x1="21" y1="3" x2="14" y2="10"></line>
-                        <line x1="3" y1="21" x2="10" y2="14"></line>
-                    </svg>
-                    Enter Fullscreen
-                </button>
+                <div class="button-container">
+                    <button id="fullscreen-btn" class="fullscreen-btn">
+                        <svg class="icon" id="fullscreen-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <polyline points="9 21 3 21 3 15"></polyline>
+                            <line x1="21" y1="3" x2="14" y2="10"></line>
+                            <line x1="3" y1="21" x2="10" y2="14"></line>
+                        </svg>
+                        Enter Fullscreen
+                    </button>
+                </div>
             </div>
         </div>
     </div>

@@ -3,55 +3,51 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Full Background Video</title>
+  <title>Blurred Notch-Loving Background</title>
   <style>
-    html{
-         margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-      background-color: black;
-    }
-    
-    
-    
-    body {
+    html, body {
       margin: 0;
       padding: 0;
       height: 100%;
+      width: 100%;
       overflow: hidden;
-    
     }
 
-    video.bg-video {
+    html {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
+      inset: 0;
+    }
+
+    html::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("https://images.unsplash.com/photo-1741761446510-7804410eade3?q=80&w=2075&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+      background-size: cover;
+      background-position: center;
+      filter: blur(20px);
       z-index: -1;
+      pointer-events: none;
+    }
+
+    body {
+      padding: env(safe-area-inset);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
     }
 
     .content {
-      position: relative;
-      z-index: 1;
-      background-color: transparent;
       color: white;
-      text-align: center;
-      padding: env(safe-area-inset-top, 40vh) 1rem 1rem;
       font-size: 2rem;
+      z-index: 1;
     }
   </style>
 </head>
 <body>
-  <video class="bg-video" autoplay muted loop playsinline>
-    <source src="https://videos.pexels.com/video-files/2098989/2098989-uhd_2560_1440_30fps.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
-
   <div class="content">
-    Welcome to your beautiful background 5 ✨
+    Notch? What notch? We don’t play safe 😏
   </div>
 </body>
 </html>

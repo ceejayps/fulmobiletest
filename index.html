@@ -8,25 +8,25 @@
     html, body {
       margin: 0;
       padding: 0;
-      height: 100%;
-      width: 100%;
-      overflow: hidden;
+      height: 100dvh;
+      width: 100dvh;
+      
     }
 
     html {
       position: fixed;
       inset: 0;
-      background-image: url("https://images.unsplash.com/photo-1741761446510-7804410eade3?q=80&w=2075&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
-      background-size: cover;
-      background-position: center;
-      filter: blur(20px);
+     
     }
 
     html::before {
       content: "";
       position: fixed;
       inset: 0;
-      
+       background-image: url("https://images.unsplash.com/photo-1741761446510-7804410eade3?q=80&w=2075&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+      background-size: cover;
+      background-position: center;
+      filter: blur(20px);
       z-index: -1;
       pointer-events: none;
     }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport settings -->
+    <!-- Enhanced viewport settings -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta http-equiv="ScreenOrientation" content="autoRotate:disabled">
     
@@ -39,12 +39,13 @@
             align-items: center;
             justify-content: center;
             
-            /* Safe area handling for notched devices */
-            padding: 0;
-            padding-left: env(safe-area-inset-left, 0);
-            padding-right: env(safe-area-inset-right, 0);
-            padding-top: env(safe-area-inset-top, 0);
-            padding-bottom: env(safe-area-inset-bottom, 0);
+            /* Aggressive safe area override */
+            padding: 0 !important;
+            margin: 0 !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
         }
         
         /* Ensure background color in fullscreen mode */
@@ -64,23 +65,51 @@
             background: linear-gradient(to right, #8a2be2, #4b0082) !important;
         }
         
+        /* Aggressive app container that ignores safe areas */
         .app-container {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw; /* Use viewport width instead of % */
+            height: 100vh; /* Use viewport height instead of % */
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 1;
             background: linear-gradient(to right, #8a2be2, #4b0082);
             
-            /* Safe area handling */
-            padding-left: env(safe-area-inset-left, 0);
-            padding-right: env(safe-area-inset-right, 0);
-            padding-top: env(safe-area-inset-top, 0);
-            padding-bottom: env(safe-area-inset-bottom, 0);
+            /* Aggressive safe area override */
+            padding: 0 !important;
+            margin: 0 !important;
+            
+            /* Negative margins to extend beyond safe areas */
+            margin-left: -50px !important;
+            margin-right: -50px !important;
+            padding-left: 50px !important;
+            padding-right: 50px !important;
+            
+            /* Override any safe area insets */
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+        
+        /* Chrome on iOS specific override */
+        @supports (-webkit-touch-callout: none) {
+            .app-container {
+                /* Even more aggressive for iOS */
+                width: 100vw !important;
+                height: 100vh !important;
+                left: 0 !important;
+                top: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                
+                /* Override safe areas */
+                padding: 0 !important;
+                margin: 0 !important;
+            }
         }
         
         /* 16:9 aspect ratio container */
@@ -95,9 +124,9 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             overflow: hidden;
             
-            /* Adjust for notch in landscape */
-            margin-left: env(safe-area-inset-left, 0);
-            margin-right: env(safe-area-inset-right, 0);
+            /* Remove any safe area adjustments */
+            margin-left: 0 !important;
+            margin-right: 0 !important;
         }
         
         /* Create 16:9 aspect ratio */
@@ -167,8 +196,8 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             background-color: rgba(0, 0, 0, 0.9);
             z-index: 1000;
             flex-direction: column;
@@ -177,11 +206,11 @@
             padding: 20px;
             text-align: center;
             
-            /* Safe area handling */
-            padding-left: env(safe-area-inset-left, 0);
-            padding-right: env(safe-area-inset-right, 0);
-            padding-top: env(safe-area-inset-top, 0);
-            padding-bottom: env(safe-area-inset-bottom, 0);
+            /* Override safe areas */
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
         }
         
         .orientation-message svg {
@@ -218,6 +247,20 @@
             
             h1 {
                 font-size: 32px;
+            }
+            
+            /* Aggressive override for landscape mode */
+            .app-container {
+                width: 100vw !important;
+                height: 100vh !important;
+                left: 0 !important;
+                top: 0 !important;
+                
+                /* Extend beyond safe areas */
+                margin-left: -50px !important;
+                margin-right: -50px !important;
+                padding-left: 50px !important;
+                padding-right: 50px !important;
             }
         }
         
@@ -261,20 +304,58 @@
             background: linear-gradient(to right, #8a2be2, #4b0082) !important;
         }
         
-        /* iOS Safari specific styles */
+        /* iOS Safari specific styles with aggressive overrides */
         @supports (-webkit-touch-callout: none) {
             /* iOS device */
             body {
                 /* Prevent overscroll/bounce */
                 position: fixed;
                 overflow: hidden;
-                width: 100%;
-                height: 100%;
+                width: 100vw !important;
+                height: 100vh !important;
+                
+                /* Override safe areas */
+                padding: 0 !important;
+                margin: 0 !important;
             }
+            
+            /* Specific handling for Chrome on iOS */
+            @media screen and (-webkit-min-device-pixel-ratio: 0) {
+                .app-container {
+                    /* Extreme measures for Chrome */
+                    position: absolute !important;
+                    width: 100vw !important;
+                    height: 100vh !important;
+                    left: 0 !important;
+                    top: 0 !important;
+                    right: 0 !important;
+                    bottom: 0 !important;
+                    
+                    /* Negative margins to extend beyond safe areas */
+                    margin-left: -50px !important;
+                    margin-right: -50px !important;
+                    padding-left: 50px !important;
+                    padding-right: 50px !important;
+                }
+            }
+        }
+        
+        /* Full viewport overlay for iOS Chrome */
+        .ios-chrome-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(to right, #8a2be2, #4b0082);
+            z-index: -1;
         }
     </style>
 </head>
 <body>
+    <div class="ios-chrome-overlay" id="iosOverlay"></div>
+    
     <div class="orientation-message">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
@@ -284,7 +365,7 @@
         <p>This application is designed to be used in landscape mode.</p>
     </div>
 
-    <div class="app-container">
+    <div class="app-container" id="appContainer">
         <div class="container">
             <div class="container-content">
                 <div class="content">
@@ -317,6 +398,8 @@
         const deviceInfo = document.getElementById('deviceInfo');
         const body = document.body;
         const html = document.documentElement;
+        const appContainer = document.getElementById('appContainer');
+        const iosOverlay = document.getElementById('iosOverlay');
         
         // Detect iOS
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
@@ -334,7 +417,36 @@
         // Update device info
         deviceInfo.textContent = `Device: ${isIOS ? 'iOS' : 'Non-iOS'}, Browser: ${isChrome ? 'Chrome' : (isSafari ? 'Safari' : 'Other')}${hasNotch ? ', Notched device' : ''}`;
         
-        // Function to go fullscreen with iOS-specific handling
+        // Special handling for iOS Chrome
+        if (isIOS && isChrome) {
+            // Show the overlay
+            iosOverlay.style.display = 'block';
+            
+            // Apply special styles for iOS Chrome
+            document.body.style.width = '100vw';
+            document.body.style.height = '100vh';
+            document.documentElement.style.width = '100vw';
+            document.documentElement.style.height = '100vh';
+            
+            // Apply aggressive styles to app container
+            appContainer.style.width = '100vw';
+            appContainer.style.height = '100vh';
+            appContainer.style.position = 'fixed';
+            appContainer.style.top = '0';
+            appContainer.style.left = '0';
+            appContainer.style.right = '0';
+            appContainer.style.bottom = '0';
+            appContainer.style.padding = '0';
+            appContainer.style.margin = '0';
+            
+            // Try to extend beyond safe areas
+            appContainer.style.marginLeft = '-50px';
+            appContainer.style.marginRight = '-50px';
+            appContainer.style.paddingLeft = '50px';
+            appContainer.style.paddingRight = '50px';
+        }
+        
+        // Function to go fullscreen with aggressive iOS-specific handling
         function goFullscreen() {
             let elem = document.documentElement;
             
@@ -348,6 +460,26 @@
                     // Add classes for styling
                     body.classList.add('fullscreen-active');
                     html.classList.add('fullscreen-active');
+                    
+                    // Apply aggressive styles to app container
+                    appContainer.style.width = '100vw';
+                    appContainer.style.height = '100vh';
+                    appContainer.style.position = 'fixed';
+                    appContainer.style.top = '0';
+                    appContainer.style.left = '0';
+                    appContainer.style.right = '0';
+                    appContainer.style.bottom = '0';
+                    appContainer.style.padding = '0';
+                    appContainer.style.margin = '0';
+                    
+                    // Try to extend beyond safe areas
+                    appContainer.style.marginLeft = '-50px';
+                    appContainer.style.marginRight = '-50px';
+                    appContainer.style.paddingLeft = '50px';
+                    appContainer.style.paddingRight = '50px';
+                    
+                    // Show the overlay
+                    iosOverlay.style.display = 'block';
                     
                     // Update button text
                     fullscreenBtn.innerHTML = `
@@ -570,6 +702,29 @@
                     // Use a timeout to ensure orientation has fully changed
                     setTimeout(goFullscreen, 500);
                 }
+                
+                // For iOS Chrome, apply aggressive styles
+                if (isIOS && isChrome) {
+                    // Apply aggressive styles to app container
+                    appContainer.style.width = '100vw';
+                    appContainer.style.height = '100vh';
+                    appContainer.style.position = 'fixed';
+                    appContainer.style.top = '0';
+                    appContainer.style.left = '0';
+                    appContainer.style.right = '0';
+                    appContainer.style.bottom = '0';
+                    appContainer.style.padding = '0';
+                    appContainer.style.margin = '0';
+                    
+                    // Try to extend beyond safe areas
+                    appContainer.style.marginLeft = '-50px';
+                    appContainer.style.marginRight = '-50px';
+                    appContainer.style.paddingLeft = '50px';
+                    appContainer.style.paddingRight = '50px';
+                    
+                    // Show the overlay
+                    iosOverlay.style.display = 'block';
+                }
             } else {
                 // We're in portrait mode
                 orientationMessage.style.display = "flex";
@@ -605,6 +760,29 @@
                 setTimeout(function() {
                     // Scroll to hide the address bar
                     window.scrollTo(0, 1);
+                    
+                    // For iOS Chrome, apply aggressive styles
+                    if (isChrome) {
+                        // Apply aggressive styles to app container
+                        appContainer.style.width = '100vw';
+                        appContainer.style.height = '100vh';
+                        appContainer.style.position = 'fixed';
+                        appContainer.style.top = '0';
+                        appContainer.style.left = '0';
+                        appContainer.style.right = '0';
+                        appContainer.style.bottom = '0';
+                        appContainer.style.padding = '0';
+                        appContainer.style.margin = '0';
+                        
+                        // Try to extend beyond safe areas
+                        appContainer.style.marginLeft = '-50px';
+                        appContainer.style.marginRight = '-50px';
+                        appContainer.style.paddingLeft = '50px';
+                        appContainer.style.paddingRight = '50px';
+                        
+                        // Show the overlay
+                        iosOverlay.style.display = 'block';
+                    }
                 }, 100);
             });
             
@@ -612,6 +790,32 @@
             window.addEventListener('orientationchange', function() {
                 setTimeout(function() {
                     window.scrollTo(0, 1);
+                    
+                    // For iOS Chrome, reapply aggressive styles after orientation change
+                    if (isChrome) {
+                        // Force fullscreen dimensions
+                        document.body.style.width = '100vw';
+                        document.body.style.height = '100vh';
+                        document.documentElement.style.width = '100vw';
+                        document.documentElement.style.height = '100vh';
+                        
+                        // Apply aggressive styles to app container
+                        appContainer.style.width = '100vw';
+                        appContainer.style.height = '100vh';
+                        appContainer.style.position = 'fixed';
+                        appContainer.style.top = '0';
+                        appContainer.style.left = '0';
+                        appContainer.style.right = '0';
+                        appContainer.style.bottom = '0';
+                        appContainer.style.padding = '0';
+                        appContainer.style.margin = '0';
+                        
+                        // Try to extend beyond safe areas
+                        appContainer.style.marginLeft = '-50px';
+                        appContainer.style.marginRight = '-50px';
+                        appContainer.style.paddingLeft = '50px';
+                        appContainer.style.paddingRight = '50px';
+                    }
                 }, 500);
             });
         }
@@ -643,6 +847,30 @@
         function forceBackground() {
             document.body.style.background = 'linear-gradient(to right, #8a2be2, #4b0082)';
             document.documentElement.style.background = 'linear-gradient(to right, #8a2be2, #4b0082)';
+            
+            // For iOS Chrome, reapply aggressive styles
+            if (isIOS && isChrome) {
+                // Force fullscreen dimensions
+                document.body.style.width = '100vw';
+                document.body.style.height = '100vh';
+                
+                // Apply aggressive styles to app container
+                appContainer.style.width = '100vw';
+                appContainer.style.height = '100vh';
+                appContainer.style.position = 'fixed';
+                appContainer.style.top = '0';
+                appContainer.style.left = '0';
+                appContainer.style.right = '0';
+                appContainer.style.bottom = '0';
+                appContainer.style.padding = '0';
+                appContainer.style.margin = '0';
+                
+                // Try to extend beyond safe areas
+                appContainer.style.marginLeft = '-50px';
+                appContainer.style.marginRight = '-50px';
+                appContainer.style.paddingLeft = '50px';
+                appContainer.style.paddingRight = '50px';
+            }
         }
         
         // Apply background on load and resize
